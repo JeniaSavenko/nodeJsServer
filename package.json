@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JeniaSavenko/backEndServer.git"
+    "url": "git+https://github.com/JeniaSavenko/nodeJsServer.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/JeniaSavenko/backEndServer/issues"
+    "url": "https://github.com/JeniaSavenko/nodeJsServer/issues"
   },
-  "homepage": "https://github.com/JeniaSavenko/backEndServer#readme",
+  "homepage": "https://github.com/JeniaSavenko/nodeJsServer#readme",
   "devDependencies": {
     "nodemon": "^1.19.0"
   },
