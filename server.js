@@ -1,28 +1,16 @@
-var express = require('express'),
-    app = express(),
-    port = process.env.PORT || 3000,
-    mongoose = require('mongoose'),
-    Task = require('./api/models/todoListModel'), //created model loading here
-    bodyParser = require('body-parser');
+const express = require('express');
+const MongoClient = require('mongodb').MongoClient;
+const bodyParser = require('body-parser');
+const db = require('./config/db');
+const app = express();
+const port = 8000;
 
-// mongoose instance connection url connection
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/Tododb');
+app.use(bodyParser.urlencoded({extended: true}));
 
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-
-var routes = require('./api/routes/todoListRoutes'); //importing route
-routes(app); //register the route
-
-
-app.listen(port);
-
-app.use(function(req, res) {
-    res.status(404).send({url: req.originalUrl + ' not found'})
-});
-
-
-console.log('todo list RESTful API server started on: ' + port);
+MongoClient.connect(db.url, (err, database) => {
+    if (err) return console.log(err)
+    require('./app/routes')(app, database);
+    app.listen(port, () => {
+        console.log('We are live on ' + port);
+    });
+})

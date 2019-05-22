@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -16,11 +17,12 @@
     "url": "https://github.com/JeniaSavenko/nodeJsServer/issues"
   },
   "homepage": "https://github.com/JeniaSavenko/nodeJsServer#readme",
-  "devDependencies": {
-    "nodemon": "^1.19.0"
-  },
   "dependencies": {
-    "express": "^4.17.0",
-    "mongoose": "^5.5.10"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.16"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
