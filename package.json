@@ -18,13 +18,16 @@
   },
   "homepage": "https://github.com/JeniaSavenko/nodeJsServer#readme",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "moment": "^2.24.0",
-    "mongodb": "^2.2.16",
-    "mongoose": "^5.5.11"
+    "axios": "0.18.0",
+    "body-parser": "1.15.2",
+    "cors": "2.8.5",
+    "express": "4.14.0",
+    "moment": "2.24.0",
+    "mongodb": "2.2.36",
+    "mongoose": "5.5.11",
+    "socket.io": "2.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "1.11.0"
   }
 }
