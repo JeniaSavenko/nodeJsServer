@@ -1,37 +1,59 @@
-const Koa = require('koa');
-const IO = require('koa-socket');
+const express = require('express');
+const bodyParser = require('body-parser')
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const mongoose = require('mongoose');
 
-const app = new Koa();
-const io = new IO();
+app.use(express.static(__dirname));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
-io.attach(app);
-
-io.on('connection', ctx => {
-    console.log('[server] connected');
+const Message = mongoose.model('Message', {
+    title: String,
+    text: String,
 });
 
-let usernames = [];
-io.on('disconnect', ctx => {
-    const { username } = ctx.socket;
-    if (username) {
-        console.log(`[server] disconnected: ${username}`);
-        usernames = usernames.filter(u => u !== username)
+const dbUrl = 'mongodb+srv://admin:2mn12d61409@cluster0-qsuzq.mongodb.net/testDataBase?retryWrites=true'
+
+app.get('/', (req, res) => {
+    Message.find({}, (err, messages) => {
+        io.emit('message', messages);
+        res.send(messages);
+    })
+});
+
+app.get('/:noteId', (req, res) => {
+    var title = req.params.title;
+    Message.find({title: title}, (err, messages) => {
+        res.send(messages);
+    })
+});
+
+app.post('/', async (req, res) => {
+    try {
+        var message = new Message(req.body);
+        var savedMessage = await message.save();
+        console.log('saved');
+        io.emit('message', req.body);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+        return console.log('error', error);
+    } finally {
+        console.log('Message Posted')
     }
+
 });
 
-let messages = [];
-io.on('CREATE_POST', (ctx, { text }) => {
-    console.log(`[server] message: ${text}`);
-    const message = {
-        title,
-        text,
-    };
-    messages.push(message);
-    console.log(message);
-
-    io.broadcast('CREATE_POST', { message });
+io.on('connection', () => {
+    console.log('a user is connected')
 });
 
-app.listen(3000, () => {
-    console.log('[server] ready');
+mongoose.connect(dbUrl, (err) => {
+    console.log('mongodb connected', err);
+});
+
+var server = http.listen(3000, () => {
+    console.log('server is running on port', server.address().port);
 });
