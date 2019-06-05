@@ -27,7 +27,6 @@ socket.on('connection', socket => {
     });
 
     socket.on('send_post', function (msg) {
-        socket.broadcast.emit('received', {message: msg});
         connect.then(db => {
             const posts = new Model({
                 title: msg.title,
@@ -38,12 +37,12 @@ socket.on('connection', socket => {
             connect.then(db => {
                 Model.find({}).then(message => {
                     socket.emit('get_post', message);
+                    socket.broadcast.emit('get_post', message);
                 });
             });
         });
     });
     socket.on('delete_post', function (msg) {
-        console.log(msg);
         connect.then(db => {
             Model.findByIdAndRemove(msg).then(message => {
                 return message
@@ -51,13 +50,13 @@ socket.on('connection', socket => {
                 connect.then(db => {
                     Model.find({}).then(message => {
                         socket.emit('get_post', message);
+                        socket.broadcast.emit('get_post', message);
                     });
                 });
             });
         })
     });
     socket.on('update_post', function (msg) {
-        console.log(msg);
         connect.then(db => {
             Model.findByIdAndUpdate(msg.id, {
                 title: msg.title,
@@ -68,6 +67,7 @@ socket.on('connection', socket => {
                 connect.then(db => {
                     Model.find({}).then(message => {
                         socket.emit('get_post', message);
+                        socket.broadcast.emit('get_post', message);
                     });
                 });
             });
