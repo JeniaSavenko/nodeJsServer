@@ -9,7 +9,7 @@ exports.post = (socket, msg) => {
     });
     return posts.save();
   }).then(() => {
-    connect.then((db) => {
+    connect.then(() => {
       Model.find({}).then((message) => {
         socket.emit('get_post', message);
         socket.broadcast.emit('get_post', message);
@@ -18,9 +18,9 @@ exports.post = (socket, msg) => {
   });
 };
 exports.delete = (socket, msg) => {
-  connect.then((db) => {
+  connect.then(() => {
     Model.findByIdAndRemove(msg).then(message => message).then(() => {
-      connect.then((db) => {
+      connect.then(() => {
         Model.find({}).then((message) => {
           socket.emit('get_post', message);
           socket.broadcast.emit('get_post', message);
@@ -30,12 +30,12 @@ exports.delete = (socket, msg) => {
   });
 };
 exports.update = (socket, msg) => {
-  connect.then((db) => {
+  connect.then(() => {
     Model.findByIdAndUpdate(msg.id, {
       title: msg.title,
       text: msg.text,
     }).then(message => message).then(() => {
-      connect.then((db) => {
+      connect.then(() => {
         Model.find({}).then((message) => {
           socket.emit('get_post', message);
           socket.broadcast.emit('get_post', message);
@@ -45,7 +45,7 @@ exports.update = (socket, msg) => {
   });
 };
 exports.get = (socket) => {
-  connect.then((db) => {
+  connect.then(() => {
     Model.find({}).then((message) => {
       socket.emit('get_post', message);
     });
