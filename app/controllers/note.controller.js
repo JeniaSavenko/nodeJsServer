@@ -2,7 +2,7 @@ const connect = require('../../config/db');
 const Model = require('../model/note.model');
 
 exports.post = (socket, msg) => {
-  connect.then((db) => {
+  connect.then(() => {
     const posts = new Model({
       title: msg.title,
       text: msg.text,
