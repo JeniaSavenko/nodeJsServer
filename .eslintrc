@@ -1,0 +1,37 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "plugin:flowtype/recommended"],
+  "plugins": [
+    "flowtype",
+    "import"
+  ],
+  "rules": {
+    "no-restricted-syntax": 0,
+    "no-underscore-dangle": 0,
+    "linebreak-style": 0,
+    "prefer-promise-reject-errors" : 0,
+    "import/prefer-default-export": 0,
+    "import/extensions": [1, "never", { "svg": "always" }],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false
+      }
+    ],
+    "semi": ["error", "always"],
+    "global-require": ["off"],
+    "max-len": ["warn"],
+    "no-case-declarations": ["off"],
+    "no-unused-expressions": ["off"],
+    "no-mixed-operators": ["off"],
+    "no-nested-ternary": ["off"],
+    "no-shadow": ["off"],
+    "no-plusplus": ["warn"]
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  }
+}
