@@ -1,14 +1,11 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const UserModel = require('./../model/user.model');
 const NoteModel = require('./../model/note.model');
 const connect = require('../../config/db');
 
-exports.post = (socket, msg) => {
+exports.post = (socket, msg, token) => {
   connect.then(() => {
-    console.log('test', msg);
     const user = new UserModel({
-      name: msg.name, password: msg.password,
+      name: msg.name, password: msg.password, token,
     });
     return user.save();
   }).then(() => {
@@ -16,6 +13,16 @@ exports.post = (socket, msg) => {
       NoteModel.find({}).then((message) => {
         socket.emit('get_post', message);
       });
+    });
+  });
+};
+
+exports.get = (socket, msg, token) => {
+  connect.then(() => {
+    UserModel.find({ name: msg.name }).then((message) => {
+      console.log('message', message);
+      (message.token === token && message.password === msg.password)
+        ? socket.emit('login_status', true) : socket.emit('login_status', false);
     });
   });
 };
