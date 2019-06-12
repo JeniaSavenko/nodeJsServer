@@ -10,17 +10,33 @@ const io = require('socket.io');
 const connect = require('./config/db');
 const Model = require('./app/model/user.model');
 
-const secretKey = '123456789';
-const expiresIn = '1h';
 const port = 3000;
+const secretKey = '123456789';
 const Request = require('./app/controllers/note.controller');
-const UserRequsets = require('./app/controllers/user.controller');
+
+
+const verifyToken = token => jwt.verify(token, secretKey, (err, decode) => (decode !== undefined ? decode : err));
 
 app.use(bodyParser.json());
 
-const createToken = payload => jwt.sign(payload, secretKey, { expiresIn });
+require('./app/controllers/user.controller')(app);
 
-const verifyToken = token => jwt.verify(token, secretKey, (err, decode) => (decode !== undefined ? decode : err));
+app.use(/^(?!\/auth).*$/, (req, res, next) => {
+  if (req.headers.authorization === undefined || req.headers.authorization.split(' ')[0] !== 'Bearer') {
+    const status = 401;
+    const message = 'Bad authorization header';
+    res.status(status).json({ status, message });
+    return;
+  }
+  try {
+    verifyToken(req.headers.authorization.split(' ')[1]);
+    next();
+  } catch (err) {
+    const status = 401;
+    const message = 'Error: access_token is not valid';
+    res.status(status).json({ status, message });
+  }
+});
 
 const socket = io(http, {
   pingInterval: 30000,
@@ -34,17 +50,7 @@ socket.on('connection', (socket) => {
     console.log('user disconnected');
   });
 
-  socket.on('registaration', (msg) => {
-    const { name, password } = msg;
-    const accessToken = createToken({ name, password });
-    UserRequsets.post(socket, msg, accessToken);
-    socket.emit('get_token', accessToken);
-  });
-
-  socket.on('login', (msg) => {
-    const { token } = msg;
-    UserRequsets.get(socket, msg, token);
-  });
+  Request.get(socket);
 
   socket.on('send_post', (msg) => {
     Request.post(socket, msg);
