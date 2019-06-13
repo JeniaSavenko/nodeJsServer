@@ -10,10 +10,12 @@ exports.post = (socket, msg) => {
     return posts.save();
   }).then(() => {
     connect.then(() => {
-      Model.find({}).then((message) => {
-        socket.emit('get_post', message);
-        socket.broadcast.emit('get_post', message);
-      });
+      Model.find({})
+        .populate('Note')
+        .then((message) => {
+          socket.emit('get_post', message);
+          socket.broadcast.emit('get_post', message);
+        });
     });
   });
 };

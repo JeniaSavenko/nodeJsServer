@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
 const UserModel = require('./../model/user.model');
-const NoteModel = require('./../model/note.model');
-const connect = require('../../config/db');
-const { ObjectID } = require('mongodb');
+
+
 const secretKey = '123456789';
 const expiresIn = '1h';
 
