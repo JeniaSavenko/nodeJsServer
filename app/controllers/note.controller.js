@@ -11,7 +11,7 @@ exports.post = (socket, msg) => {
   }).then(() => {
     connect.then(() => {
       Model.find({})
-        .populate('Note')
+        .populate('User')
         .then((message) => {
           socket.emit('get_post', message);
           socket.broadcast.emit('get_post', message);

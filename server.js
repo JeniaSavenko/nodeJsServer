@@ -39,8 +39,8 @@ app.use(/^(?!\/auth).*$/, (req, res, next) => {
 });
 
 const socket = io(http, {
-  pingInterval: 30000,
-  pingTimeout: 60000,
+  pingInterval: 3000,
+  pingTimeout: 6000,
 });
 
 socket.on('connection', (socket) => {
