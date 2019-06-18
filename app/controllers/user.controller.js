@@ -1,26 +1,25 @@
-const jwt = require('jsonwebtoken');
-const UserModel = require('./../model/user.model');
+import jwt from 'jsonwebtoken';
+import UserModel from '../model/user';
+import Constants from '../../config/constants';
 
-
-const secretKey = '123456789';
 const expiresIn = '1h';
 
-const createToken = payload => jwt.sign(payload, secretKey, { expiresIn });
+const createToken = payload => jwt.sign(payload, Constants.secretKey, { expiresIn });
 
 function isAuthenticated({ name, password, notes }) {
   return notes.findIndex(user => user.name === name && user.password === password) !== -1;
 }
 
-module.exports = (app) => {
+export const Controller = (app) => {
   app.post('/auth/login', (req, res) => {
     const { name, password } = req.body;
     UserModel.find()
       .then((notes) => {
-        if (isAuthenticated({
+        if (!isAuthenticated({
           name,
           password,
           notes,
-        }) === false) {
+        })) {
           const status = 401;
           const message = 'Incorrect email or password';
           res.status(status)
@@ -54,7 +53,7 @@ module.exports = (app) => {
           name,
           password,
           notes,
-        }) === true) {
+        })) {
           const status = 401;
           const message = 'This name already exist';
           res.status(status)
