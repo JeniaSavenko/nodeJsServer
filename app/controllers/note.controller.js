@@ -2,7 +2,7 @@ const connect = require('../../config/db');
 const Model = require('../model/note.model');
 
 exports.post = (socket, msg) => {
-  connect.then((db) => {
+  connect.then(() => {
     const posts = new Model({
       title: msg.title,
       text: msg.text,
@@ -10,10 +10,12 @@ exports.post = (socket, msg) => {
     return posts.save();
   }).then(() => {
     connect.then(() => {
-      Model.find({}).then((message) => {
-        socket.emit('get_post', message);
-        socket.broadcast.emit('get_post', message);
-      });
+      Model.find({})
+        .populate('User')
+        .then((message) => {
+          socket.emit('get_post', message);
+          socket.broadcast.emit('get_post', message);
+        });
     });
   });
 };
