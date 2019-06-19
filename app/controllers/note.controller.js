@@ -49,6 +49,37 @@ export const update = (socket, msg) => {
       });
   });
 };
+
+export const startEdit = (socket, msg) => {
+  connect.then(() => {
+    Model.findByIdAndUpdate(msg.postId, {
+      editMode: true,
+      editing: msg.userId,
+    }).then(message => message).then(() => {
+      connect.then(() => {
+        Model.find({}).then((message) => {
+          socket.broadcast.emit('get_post', message);
+        });
+      });
+    });
+  });
+};
+
+export const finishEdit = (socket, msg) => {
+  connect.then(() => {
+    Model.findByIdAndUpdate(msg, {
+      editMode: false,
+      editing: undefined,
+    }).then(message => message).then(() => {
+      connect.then(() => {
+        Model.find({}).then((message) => {
+          socket.broadcast.emit('get_post', message);
+        });
+      });
+    });
+  });
+};
+
 export const get = (socket) => {
   connect.then(() => {
     Model.find({}).then((message) => {

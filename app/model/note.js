@@ -7,6 +7,8 @@ const now = moment().format('X');
 const NoteSchema = mongoose.Schema({
   title: String,
   text: String,
+  editMode: Boolean,
+  editing: String || undefined,
   postedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

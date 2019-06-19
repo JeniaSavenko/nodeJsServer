@@ -22,6 +22,12 @@ const ConnectSocket = (http) => {
     socket.on('update_post', (msg) => {
       Request.update(socket, msg);
     });
+    socket.on('edit_mode_start', (msg) => {
+      Request.startEdit(socket, msg);
+    });
+    socket.on('edit_mode_finish', (msg) => {
+      Request.finishEdit(socket, msg);
+    });
   });
 };
 
