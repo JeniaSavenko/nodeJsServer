@@ -1,65 +1,42 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../model/user';
-import Constants from '../../config/constants';
+import Constants, { messageExist, status401 } from '../../config/constants';
 
 const expiresIn = '1h';
 
-const createToken = payload => jwt.sign(payload, Constants.secretKey, { expiresIn });
+export const createToken = payload => jwt.sign(payload, Constants.secretKey, { expiresIn });
 
-function isAuthenticated({ name, password, notes }) {
-  return notes.findIndex(user => user.name === name && user.password === password) !== -1;
+function isAuthenticated({ name, notes }) {
+  return notes.findIndex(user => user.name === name) !== -1;
 }
 
 export const Controller = (app) => {
-  app.post('/auth/login', (req, res) => {
+  app.post(`${Constants.mainUrl}${Constants.login}`, (req, resolve) => {
     const { name, password } = req.body;
-    UserModel.find()
-      .then((notes) => {
-        if (!isAuthenticated({
-          name,
-          password,
-          notes,
-        })) {
-          const status = 401;
-          const message = 'Incorrect email or password';
-          res.status(status)
-            .json({
-              status,
-              message,
-            });
-          return;
-        }
-
-        const accessToken = createToken({
-          name,
-          password,
-        });
-        res.status(200)
-          .json({ accessToken });
+    UserModel.findOne({ name })
+      .then((user) => {
+        user.comparePassword(name, password, user, resolve);
       })
       .catch((err) => {
-        res.status(500)
+        resolve.status(Constants.status500)
           .send({
-            message: err.message || 'Some error occurred while retrieving notes.',
+            message: err.message || Constants.message500,
           });
       });
   });
 
-  app.post('/auth/reg', (req, res) => {
+  app.post(`${Constants.mainUrl}${Constants.reg}`, (req, res) => {
     const { name, password } = req.body;
     UserModel.find()
       .then((notes) => {
         if (isAuthenticated({
           name,
-          password,
           notes,
         })) {
-          const status = 401;
-          const message = 'This name already exist';
-          res.status(status)
+          res.status(status401)
             .json({
-              status,
-              message,
+              status401,
+              messageExist,
             });
           return;
         }
@@ -68,20 +45,19 @@ export const Controller = (app) => {
           password,
         });
         const user = new UserModel({
-          name: name || 'Untitled Note',
+          name: name || Constants.messageUntitled,
           password,
           token: accessToken,
         });
-        // Save Note in the database
         user.save()
           .then((data) => {
             res.send(data);
           });
       })
       .catch((err) => {
-        res.status(500)
+        res.status(Constants.status500)
           .send({
-            message: err.message || 'Some error occurred while retrieving notes.',
+            message: err.message || Constants.message500,
           });
       });
   });

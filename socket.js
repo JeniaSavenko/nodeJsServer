@@ -1,5 +1,6 @@
 import io from 'socket.io';
 import * as Request from './app/controllers/note.controller';
+import Constants from './config/constants';
 
 const ConnectSocket = (http) => {
   const socket = io(http, {
@@ -7,25 +8,25 @@ const ConnectSocket = (http) => {
     pingTimeout: 6000,
   });
 
-  socket.on('connection', (socket) => {
-    socket.on('disconnect', () => {
+  socket.on(Constants.connection, (socket) => {
+    socket.on(Constants.disconnect, () => {
     });
 
     Request.get(socket);
 
-    socket.on('send_post', (msg) => {
+    socket.on(Constants.sendPost, (msg) => {
       Request.post(socket, msg);
     });
-    socket.on('delete_post', (msg) => {
+    socket.on(Constants.deletePost, (msg) => {
       Request.del(socket, msg);
     });
-    socket.on('update_post', (msg) => {
+    socket.on(Constants.updatePost, (msg) => {
       Request.update(socket, msg);
     });
-    socket.on('edit_mode_start', (msg) => {
+    socket.on(Constants.editModeStart, (msg) => {
       Request.startEdit(socket, msg);
     });
-    socket.on('edit_mode_finish', (msg) => {
+    socket.on(Constants.editModeFinish, (msg) => {
       Request.finishEdit(socket, msg);
     });
   });

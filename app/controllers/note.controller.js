@@ -1,5 +1,6 @@
 import connect from '../../config/db';
 import Model from '../model/note';
+import Constants from '../../config/constants';
 
 export const post = (socket, msg) => {
   connect.then(() => {
@@ -13,8 +14,7 @@ export const post = (socket, msg) => {
       Model.find({})
         .populate('User')
         .then((message) => {
-          socket.emit('get_post', message);
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
         });
     });
   });
@@ -25,8 +25,7 @@ export const del = (socket, msg) => {
     Model.findByIdAndRemove(msg).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
-          socket.emit('get_post', message);
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
         });
       });
     });
@@ -42,8 +41,7 @@ export const update = (socket, msg) => {
       .then(message => message).then(() => {
         connect.then(() => {
           Model.find({}).then((message) => {
-            socket.emit('get_post', message);
-            socket.broadcast.emit('get_post', message);
+            socket.broadcast.emit(Constants.getPost, message);
           });
         });
       });
@@ -58,7 +56,7 @@ export const startEdit = (socket, msg) => {
     }).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
         });
       });
     });
@@ -73,7 +71,7 @@ export const finishEdit = (socket, msg) => {
     }).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
         });
       });
     });
@@ -83,7 +81,7 @@ export const finishEdit = (socket, msg) => {
 export const get = (socket) => {
   connect.then(() => {
     Model.find({}).then((message) => {
-      socket.emit('get_post', message);
+      socket.emit(Constants.getPost, message);
     });
   });
 };

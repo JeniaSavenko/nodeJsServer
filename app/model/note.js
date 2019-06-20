@@ -14,7 +14,7 @@ const NoteSchema = mongoose.Schema({
     ref: 'User',
   }],
 }, {
-  timestamps: { type: Date, default: now },
+  timestamps: true,
 });
 
 const Note = mongoose.model('Note', NoteSchema);
