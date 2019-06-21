@@ -6,10 +6,6 @@ const expiresIn = '1h';
 
 export const createToken = payload => jwt.sign(payload, Constants.secretKey, { expiresIn });
 
-function isAuthenticated({ name, notes }) {
-  return notes.findIndex(user => user.name === name) !== -1;
-}
-
 export const Controller = (app) => {
   app.post(`${Constants.mainUrl}${Constants.login}`, (req, resolve) => {
     const { name, password } = req.body;
@@ -28,18 +24,7 @@ export const Controller = (app) => {
   app.post(`${Constants.mainUrl}${Constants.reg}`, (req, res) => {
     const { name, password } = req.body;
     UserModel.find()
-      .then((notes) => {
-        if (isAuthenticated({
-          name,
-          notes,
-        })) {
-          res.status(status401)
-            .json({
-              status401,
-              messageExist,
-            });
-          return;
-        }
+      .then(() => {
         const accessToken = createToken({
           name,
           password,

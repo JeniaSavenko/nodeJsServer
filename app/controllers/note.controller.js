@@ -15,6 +15,7 @@ export const post = (socket, msg) => {
         .populate('User')
         .then((message) => {
           socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
         });
     });
   });
@@ -25,6 +26,7 @@ export const del = (socket, msg) => {
     Model.findByIdAndRemove(msg).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
+          socket.broadcast.emit(Constants.getPost, message);
           socket.broadcast.emit(Constants.getPost, message);
         });
       });
@@ -42,6 +44,7 @@ export const update = (socket, msg) => {
         connect.then(() => {
           Model.find({}).then((message) => {
             socket.broadcast.emit(Constants.getPost, message);
+            socket.emit(Constants.getPost, message);
           });
         });
       });
@@ -57,6 +60,7 @@ export const startEdit = (socket, msg) => {
       connect.then(() => {
         Model.find({}).then((message) => {
           socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
         });
       });
     });
@@ -72,6 +76,7 @@ export const finishEdit = (socket, msg) => {
       connect.then(() => {
         Model.find({}).then((message) => {
           socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
         });
       });
     });

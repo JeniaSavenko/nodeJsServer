@@ -6,7 +6,7 @@ import { createToken } from '../controllers/user.controller';
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
-  name: String,
+  name: { type: String, unique: true },
   password: String,
   token: String,
 });
