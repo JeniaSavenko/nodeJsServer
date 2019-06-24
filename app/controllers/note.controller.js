@@ -1,7 +1,8 @@
-const connect = require('../../config/db');
-const Model = require('../model/note.model');
+import connect from '../../config/db';
+import Model from '../model/note';
+import Constants from '../../config/constants';
 
-exports.post = (socket, msg) => {
+export const post = (socket, msg) => {
   connect.then(() => {
     const posts = new Model({
       title: msg.title,
@@ -13,43 +14,79 @@ exports.post = (socket, msg) => {
       Model.find({})
         .populate('User')
         .then((message) => {
-          socket.emit('get_post', message);
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
         });
     });
   });
 };
-exports.delete = (socket, msg) => {
+
+export const del = (socket, msg) => {
   connect.then(() => {
     Model.findByIdAndRemove(msg).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
-          socket.emit('get_post', message);
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
+          socket.broadcast.emit(Constants.getPost, message);
         });
       });
     });
   });
 };
-exports.update = (socket, msg) => {
+
+export const update = (socket, msg) => {
   connect.then(() => {
     Model.findByIdAndUpdate(msg.id, {
       title: msg.title,
       text: msg.text,
+    }).populate('User')
+      .then(message => message).then(() => {
+        connect.then(() => {
+          Model.find({}).then((message) => {
+            socket.broadcast.emit(Constants.getPost, message);
+            socket.emit(Constants.getPost, message);
+          });
+        });
+      });
+  });
+};
+
+export const startEdit = (socket, msg) => {
+  connect.then(() => {
+    Model.findByIdAndUpdate(msg.postId, {
+      editMode: true,
+      editing: msg.userId,
     }).then(message => message).then(() => {
       connect.then(() => {
         Model.find({}).then((message) => {
-          socket.emit('get_post', message);
-          socket.broadcast.emit('get_post', message);
+          socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
         });
       });
     });
   });
 };
-exports.get = (socket) => {
+
+export const finishEdit = (socket, msg) => {
+  connect.then(() => {
+    Model.findByIdAndUpdate(msg, {
+      editMode: false,
+      editing: undefined,
+    }).then(message => message).then(() => {
+      connect.then(() => {
+        Model.find({}).then((message) => {
+          socket.broadcast.emit(Constants.getPost, message);
+          socket.emit(Constants.getPost, message);
+        });
+      });
+    });
+  });
+};
+
+export const get = (socket) => {
   connect.then(() => {
     Model.find({}).then((message) => {
-      socket.emit('get_post', message);
+      socket.emit(Constants.getPost, message);
     });
   });
 };

@@ -1,17 +1,20 @@
-const mongoose = require('mongoose');
-const moment = require('moment');
+import mongoose from 'mongoose';
+import moment from 'moment';
 
-const now = moment();
+
+const now = moment().format('X');
 
 const NoteSchema = mongoose.Schema({
   title: String,
   text: String,
+  editMode: Boolean,
+  editing: String || undefined,
   postedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
 }, {
-  timestamps: { type: String, default: now.format('dddd, MMMM Do YYYY, h:mm:ss a') },
+  timestamps: true,
 });
 
 const Note = mongoose.model('Note', NoteSchema);

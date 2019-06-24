@@ -1,12 +1,18 @@
 {
   "name": "todolistapi",
   "version": "1.0.0",
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel --presets es2015 -d lib/ src",
-    "dev": "nodemon server.js"
+    "dev": "./node_modules/.bin/babel-node server.js"
   },
   "repository": {
     "type": "git",
@@ -20,13 +26,14 @@
   "homepage": "https://github.com/JeniaSavenko/nodeJsServer#readme",
   "dependencies": {
     "axios": "0.18.0",
+    "bcrypt": "3.0.6",
     "bluebird": "3.5.5",
     "body-parser": "1.15.2",
     "connect-mongo": "2.0.3",
     "cors": "2.8.5",
     "express": "4.14.0",
     "express-session": "1.16.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "8.5.1",
     "moment": "2.24.0",
     "mongodb": "2.2.36",
     "mongojs": "2.6.0",
@@ -35,9 +42,9 @@
     "socketio-jwt": "4.5.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "babel-cli": "6.26.0",
     "babel-eslint": "10.0.1",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2015": "6.24.1",
     "eslint": "5.16.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-airbnb-base": "13.1.0",
@@ -47,6 +54,6 @@
     "eslint-plugin-jsx-a11y": "6.2.1",
     "eslint-plugin-react": "7.13.0",
     "nodemon": "1.11.0",
-    "rimraf": "^2.6.3"
+    "rimraf": "2.6.3"
   }
 }
