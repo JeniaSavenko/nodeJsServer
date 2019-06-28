@@ -1,33 +1,44 @@
 import io from 'socket.io';
 import * as Request from './app/controllers/note.controller';
-import Constants from './config/constants';
+import { addUser, create } from './app/controllers/room.controller';
+import socketConst from './config/constants/socket';
 
 const ConnectSocket = (http) => {
+  let room;
   const socket = io(http, {
     pingInterval: 3000,
     pingTimeout: 6000,
   });
-
-  socket.on(Constants.connection, (socket) => {
-    socket.on(Constants.disconnect, () => {
+  socket.on(socketConst.connection, (socket) => {
+    socket.on(socketConst.joinRoom, ({ name, userName }) => {
+      room = name;
+      create(name, userName, socket);
     });
 
-    Request.get(socket);
+    socket.on(socketConst.addUser, ({ roomName, userName }) => {
+      room = roomName;
+      addUser(roomName, userName);
+    });
 
-    socket.on(Constants.sendPost, (msg) => {
+    socket.on(socketConst.disconnect, () => {
+    });
+
+    Request.get(socket, room);
+
+    socket.on(socketConst.sendPost, (msg) => {
       Request.post(socket, msg);
     });
-    socket.on(Constants.deletePost, (msg) => {
-      Request.del(socket, msg);
+    socket.on(socketConst.deletePost, (msg) => {
+      Request.del(socket, msg, room);
     });
-    socket.on(Constants.updatePost, (msg) => {
-      Request.update(socket, msg);
+    socket.on(socketConst.updatePost, (msg) => {
+      Request.update(socket, msg, room);
     });
-    socket.on(Constants.editModeStart, (msg) => {
-      Request.startEdit(socket, msg);
+    socket.on(socketConst.editModeStart, (msg) => {
+      Request.startEdit(socket, msg, room);
     });
-    socket.on(Constants.editModeFinish, (msg) => {
-      Request.finishEdit(socket, msg);
+    socket.on(socketConst.editModeFinish, (msg) => {
+      Request.finishEdit(socket, msg, room);
     });
   });
 };

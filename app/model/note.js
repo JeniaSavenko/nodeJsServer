@@ -1,14 +1,11 @@
 import mongoose from 'mongoose';
-import moment from 'moment';
-
-
-const now = moment().format('X');
 
 const NoteSchema = mongoose.Schema({
   title: String,
   text: String,
   editMode: Boolean,
   editing: String || undefined,
+  roomName: String || Number,
   postedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
