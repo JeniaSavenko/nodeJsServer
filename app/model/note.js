@@ -6,6 +6,7 @@ const NoteSchema = mongoose.Schema({
   editMode: Boolean,
   editing: String || undefined,
   roomName: String || Number,
+  history: [{ type: Number, unique: true }],
   postedBy: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -5,14 +5,15 @@ import socketConst from './config/constants/socket';
 
 const ConnectSocket = (http) => {
   let room;
-  const socket = io(http, {
+  const WebSocket = io(http, {
     pingInterval: 3000,
     pingTimeout: 6000,
   });
-  socket.on(socketConst.connection, (socket) => {
+  WebSocket.on(socketConst.connection, (socket) => {
     socket.on(socketConst.joinRoom, ({ name, userName }) => {
       room = name;
       create(name, userName, socket);
+      Request.get(socket, room);
     });
 
     socket.on(socketConst.addUser, ({ roomName, userName }) => {
