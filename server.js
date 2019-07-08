@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import https from 'http';
 import { checkToken } from './app/check-token';
 import connect from './config/constants/connect';
-import { Controller } from './app/controllers/user.controller';
+import { Controller } from './app/controllers/user';
 import Socket from './socket';
 
 const app = express();

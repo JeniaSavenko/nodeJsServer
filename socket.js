@@ -1,6 +1,6 @@
 import io from 'socket.io';
-import * as Request from './app/controllers/note.controller';
-import { addUser, create } from './app/controllers/room.controller';
+import * as Request from './app/controllers/note';
+import { addUser, create } from './app/controllers/room';
 import socketConst from './config/constants/socket';
 
 const ConnectSocket = (http) => {

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import connect from '../../config/constants/connect';
 import status from '../../config/constants/status';
-import { createToken } from '../controllers/user.controller';
+import { createToken } from '../controllers/user';
 
 const { Schema } = mongoose;
 
