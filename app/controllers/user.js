@@ -1,27 +1,28 @@
 import jwt from 'jsonwebtoken';
 import UserModel from '../model/user';
-import Constants, { messageExist, status401 } from '../../config/constants';
+import connect from '../../config/constants/connect';
+import status from '../../config/constants/status';
 
 const expiresIn = '1h';
 
-export const createToken = payload => jwt.sign(payload, Constants.secretKey, { expiresIn });
+export const createToken = payload => jwt.sign(payload, connect.secretKey, { expiresIn });
 
 export const Controller = (app) => {
-  app.post(`${Constants.mainUrl}${Constants.login}`, (req, resolve) => {
+  app.post(`${connect.mainUrl}${connect.login}`, (req, resolve) => {
     const { name, password } = req.body;
     UserModel.findOne({ name })
       .then((user) => {
         user.comparePassword(name, password, user, resolve);
       })
       .catch((err) => {
-        resolve.status(Constants.status500)
+        resolve.status(status.status500)
           .send({
-            message: err.message || Constants.message500,
+            message: err.message || status.message500,
           });
       });
   });
 
-  app.post(`${Constants.mainUrl}${Constants.reg}`, (req, res) => {
+  app.post(`${connect.mainUrl}${connect.reg}`, (req, res) => {
     const { name, password } = req.body;
     UserModel.find()
       .then(() => {
@@ -30,7 +31,7 @@ export const Controller = (app) => {
           password,
         });
         const user = new UserModel({
-          name: name || Constants.messageUntitled,
+          name: name || status.messageUntitled,
           password,
           token: accessToken,
         });
@@ -40,9 +41,9 @@ export const Controller = (app) => {
           });
       })
       .catch((err) => {
-        res.status(Constants.status500)
+        res.status(status.status500)
           .send({
-            message: err.message || Constants.message500,
+            message: err.message || status.message500,
           });
       });
   });

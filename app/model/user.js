@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
-import Constants from '../../config/constants';
-import { createToken } from '../controllers/user.controller';
+import connect from '../../config/constants/connect';
+import status from '../../config/constants/status';
+import { createToken } from '../controllers/user';
 
 const { Schema } = mongoose;
 
@@ -9,9 +10,11 @@ const UsersSchema = new Schema({
   name: { type: String, unique: true },
   password: String,
   token: String,
+}, {
+  timestamp: true,
 });
 
-UsersSchema.pre(Constants.save, function (next) {
+UsersSchema.pre(connect.save, function (next) {
   const user = this;
 
   bcrypt.genSalt(10, (err, salt) => {
@@ -41,9 +44,9 @@ UsersSchema.methods = {
           resolve.status(200)
             .json({ accessToken });
         } else {
-          resolve.status(Constants.status500)
+          resolve.status(status.status500)
             .send({
-              message: err.message || Constants.message500,
+              message: err.message || status.message500,
             });
         }
       });

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import Constants from '../config/constants';
+import Constants from '../config/constants/connect';
 
 export const checkToken = (req, res, next) => {
   let token = req.headers.authorization;

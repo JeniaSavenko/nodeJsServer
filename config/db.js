@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import Constants from './constants';
+import connectConst from './constants/connect';
 
 mongoose.Promise = require('bluebird');
 
-const connect = mongoose.connect(Constants.url, { useNewUrlParser: true, useFindAndModify: true });
+const connect = mongoose.connect(connectConst.url, { useNewUrlParser: true, useFindAndModify: true });
 
 export default connect;
