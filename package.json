@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/JeniaSavenko/nodeJsServer#readme",
   "dependencies": {
-    "axios": "0.18.0",
+    "axios": "0.21.1",
     "bcrypt": "3.0.6",
     "bluebird": "3.5.5",
     "body-parser": "1.15.2",
