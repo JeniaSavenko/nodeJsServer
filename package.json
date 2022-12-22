@@ -33,7 +33,7 @@
     "cors": "2.8.5",
     "express": "4.14.0",
     "express-session": "1.16.1",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "moment": "2.24.0",
     "mongodb": "2.2.36",
     "mongojs": "2.6.0",
